@@ -288,3 +288,39 @@ Estate NLP Engine زیرسامانه پردازش زبان این محصول ب�
 
 تا پیش از تأیید Schema و قرارداد خروجی،
 پیاده‌سازی Normalizer و Number Parser شروع نشود.
+
+## 18. تحلیل توزیع برچسب‌ها — 2026-10-30
+
+### نتایج تأییدشده
+- تعداد رکورد: 10,000
+- همه رکوردها دارای weakLabel=True هستند.
+- intent شامل sell با 6,165 و rent با 3,835 رکورد است.
+- propertyTypeSource دارای 14 دسته متمایز است.
+- deedTypeSource دارای 5 دسته غیر Null است.
+- citySlug دارای 347 مقدار متمایز است.
+- neighborhoodSlug دارای 816 مقدار متمایز و 4,294 مقدار غیرخالی است.
+
+### نکات عددی
+- buildingAreaSqm: 9,998 مقدار مطابق Regex عددی
+- landAreaSqm: 1,872
+- priceValueSource: 5,872
+- rentValueSource: 3,507
+- creditValueSource: 3,513
+- roomsCountSource: شش مقدار متمایز، بدون تطبیق با Regex عددی
+
+تطبیق Regex به معنی تأیید صحت معنایی مقادیر نیست.
+
+### تصمیم‌های فعلی
+- weakLabel در نمونه فعلی معیار تفکیک کیفیت نیست.
+- فیلدهای عددی باید جداگانه از نظر قالب و معنا بررسی شوند.
+- roomsCountSource نباید فعلاً عددی فرض شود.
+- معنای دقیق Source هنوز مشخص نیست.
+- Schema نهایی هنوز تصویب نشده است.
+
+### مرحله بعد
+بررسی سازگاری intent با propertyTypeSource،
+مقادیر متمایز roomsCountSource و معنای برچسب‌های Source.
+
+### وضعیت پیاده‌سازی
+هنوز هیچ Normalizer، Number Parser یا Rule Engine
+پیاده‌سازی نشده است.
