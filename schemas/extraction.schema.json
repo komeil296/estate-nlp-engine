@@ -1,0 +1,499 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Estate NLP Extraction Result",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "document_type",
+    "transaction_type",
+    "property_type",
+    "location",
+    "property",
+    "financial_mentions",
+    "rental_conditions",
+    "provenance"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "0.1"
+    },
+    "document_type": {
+      "$ref": "#/$defs/documentTypeField"
+    },
+    "transaction_type": {
+      "$ref": "#/$defs/transactionTypeField"
+    },
+    "property_type": {
+      "$ref": "#/$defs/propertyTypeField"
+    },
+    "location": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["city", "neighborhood"],
+      "properties": {
+        "city": {
+          "$ref": "#/$defs/stringField"
+        },
+        "neighborhood": {
+          "$ref": "#/$defs/stringField"
+        }
+      }
+    },
+    "property": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["building_area_sqm", "land_area_sqm", "rooms", "building", "features"],
+      "properties": {
+        "building_area_sqm": {
+          "$ref": "#/$defs/numberField"
+        },
+        "land_area_sqm": {
+          "$ref": "#/$defs/numberField"
+        },
+        "rooms": {
+          "$ref": "#/$defs/roomCountField"
+        },
+        "building": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "floor",
+            "total_floors",
+            "units_per_floor",
+            "construction_year",
+            "is_rebuilt",
+            "deed_type",
+            "building_direction",
+            "floor_material"
+          ],
+          "properties": {
+            "floor": {
+              "$ref": "#/$defs/stringField"
+            },
+            "total_floors": {
+              "$ref": "#/$defs/numberField"
+            },
+            "units_per_floor": {
+              "$ref": "#/$defs/numberField"
+            },
+            "construction_year": {
+              "$ref": "#/$defs/numberField"
+            },
+            "is_rebuilt": {
+              "$ref": "#/$defs/booleanField"
+            },
+            "deed_type": {
+              "$ref": "#/$defs/stringField"
+            },
+            "building_direction": {
+              "$ref": "#/$defs/stringField"
+            },
+            "floor_material": {
+              "$ref": "#/$defs/stringField"
+            }
+          }
+        },
+        "features": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "parking",
+            "elevator",
+            "warehouse",
+            "balcony",
+            "pool",
+            "jacuzzi",
+            "sauna",
+            "water",
+            "electricity",
+            "gas",
+            "heating",
+            "cooling",
+            "restroom",
+            "security_guard"
+          ],
+          "properties": {
+            "parking": {"$ref": "#/$defs/booleanField"},
+            "elevator": {"$ref": "#/$defs/booleanField"},
+            "warehouse": {"$ref": "#/$defs/booleanField"},
+            "balcony": {"$ref": "#/$defs/booleanField"},
+            "pool": {"$ref": "#/$defs/booleanField"},
+            "jacuzzi": {"$ref": "#/$defs/booleanField"},
+            "sauna": {"$ref": "#/$defs/booleanField"},
+            "water": {"$ref": "#/$defs/booleanField"},
+            "electricity": {"$ref": "#/$defs/booleanField"},
+            "gas": {"$ref": "#/$defs/booleanField"},
+            "heating": {"$ref": "#/$defs/booleanField"},
+            "cooling": {"$ref": "#/$defs/booleanField"},
+            "restroom": {"$ref": "#/$defs/booleanField"},
+            "security_guard": {"$ref": "#/$defs/booleanField"}
+          }
+        }
+      }
+    },
+    "financial_mentions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "semantic_role",
+          "raw_value",
+          "normalized_value",
+          "currency",
+          "period",
+          "evidence"
+        ],
+        "properties": {
+          "semantic_role": {
+            "enum": [
+              "asking_price",
+              "budget",
+              "deposit",
+              "monthly_rent",
+              "daily_rent",
+              "weekend_rent",
+              "price_per_sqm",
+              "cost_per_extra_person",
+              "unknown"
+            ]
+          },
+          "raw_value": {
+            "type": "string",
+            "minLength": 1
+          },
+          "normalized_value": {
+            "type": ["number", "null"],
+            "minimum": 0
+          },
+          "currency": {
+            "enum": ["toman", "rial", "unspecified"]
+          },
+          "period": {
+            "enum": [
+              "day",
+              "month",
+              "year",
+              "one_time",
+              "unspecified"
+            ]
+          },
+          "evidence": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "rental_conditions": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["allow_single_person"],
+      "properties": {
+        "allow_single_person": {
+          "$ref": "#/$defs/booleanField"
+        }
+      }
+    },
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source",
+        "source_style",
+        "source_row",
+        "original_dataset_labels"
+      ],
+      "properties": {
+        "source": {
+          "type": ["string", "null"]
+        },
+        "source_style": {
+          "type": ["string", "null"]
+        },
+        "source_row": {
+          "type": ["integer", "null"],
+          "minimum": 1
+        },
+        "original_dataset_labels": {
+          "type": "object",
+          "additionalProperties": true
+        }
+      }
+    }
+  },
+  "$defs": {
+    "fieldResult": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "value",
+        "status",
+        "evidence",
+        "confidence",
+        "candidates"
+      ],
+      "properties": {
+        "value": {
+          "type": ["string", "number", "boolean", "null"]
+        },
+        "status": {
+          "enum": [
+            "extracted",
+            "not_found",
+            "ambiguous",
+            "conflict"
+          ]
+        },
+        "evidence": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "confidence": {
+          "type": "null"
+        },
+        "candidates": {
+          "type": "array",
+          "items": {
+            "type": ["string", "number", "boolean"]
+          },
+          "uniqueItems": true
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "status": {"const": "extracted"}
+            }
+          },
+          "then": {
+            "properties": {
+              "value": {"not": {"type": "null"}},
+              "evidence": {"minItems": 1},
+              "candidates": {"maxItems": 0}
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "status": {"const": "not_found"}
+            }
+          },
+          "then": {
+            "properties": {
+              "value": {"type": "null"},
+              "evidence": {"maxItems": 0},
+              "candidates": {"maxItems": 0}
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "enum": ["ambiguous", "conflict"]
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "value": {"type": "null"},
+              "evidence": {"minItems": 1},
+              "candidates": {"minItems": 2}
+            }
+          }
+        }
+      ]
+    },
+    "stringField": {
+      "allOf": [
+        {"$ref": "#/$defs/fieldResult"},
+        {
+          "properties": {
+            "value": {"type": ["string", "null"]},
+            "candidates": {
+              "items": {"type": "string"}
+            }
+          }
+        }
+      ]
+    },
+    "numberField": {
+      "allOf": [
+        {"$ref": "#/$defs/fieldResult"},
+        {
+          "properties": {
+            "value": {
+              "type": ["number", "null"],
+              "minimum": 0
+            },
+            "candidates": {
+              "items": {
+                "type": "number",
+                "minimum": 0
+              }
+            }
+          }
+        }
+      ]
+    },
+    "booleanField": {
+      "allOf": [
+        {"$ref": "#/$defs/fieldResult"},
+        {
+          "properties": {
+            "value": {"type": ["boolean", "null"]},
+            "candidates": {
+              "items": {"type": "boolean"}
+            }
+          }
+        }
+      ]
+    },
+    "documentTypeField": {
+      "allOf": [
+        {"$ref": "#/$defs/stringField"},
+        {
+          "properties": {
+            "value": {
+              "enum": [
+                "listing",
+                "customer_requirement",
+                "conversation",
+                "unknown",
+                null
+              ]
+            },
+            "candidates": {
+              "items": {
+                "enum": [
+                  "listing",
+                  "customer_requirement",
+                  "conversation",
+                  "unknown"
+                ]
+              }
+            }
+          }
+        }
+      ]
+    },
+    "transactionTypeField": {
+      "allOf": [
+        {"$ref": "#/$defs/stringField"},
+        {
+          "properties": {
+            "value": {
+              "enum": [
+                "sale",
+                "rent",
+                "temporary_rent",
+                "presale",
+                "partnership",
+                "service",
+                "unknown",
+                null
+              ]
+            },
+            "candidates": {
+              "items": {
+                "enum": [
+                  "sale",
+                  "rent",
+                  "temporary_rent",
+                  "presale",
+                  "partnership",
+                  "service",
+                  "unknown"
+                ]
+              }
+            }
+          }
+        }
+      ]
+    },
+    "propertyTypeField": {
+      "allOf": [
+        {"$ref": "#/$defs/stringField"},
+        {
+          "properties": {
+            "value": {
+              "enum": [
+                "apartment",
+                "house",
+                "villa",
+                "land",
+                "shop",
+                "office",
+                "workspace",
+                "industrial",
+                "suite",
+                "other",
+                "unknown",
+                null
+              ]
+            },
+            "candidates": {
+              "items": {
+                "enum": [
+                  "apartment",
+                  "house",
+                  "villa",
+                  "land",
+                  "shop",
+                  "office",
+                  "workspace",
+                  "industrial",
+                  "suite",
+                  "other",
+                  "unknown"
+                ]
+              }
+            }
+          }
+        }
+      ]
+    },
+    "roomCountField": {
+      "allOf": [
+        {"$ref": "#/$defs/stringField"},
+        {
+          "properties": {
+            "value": {
+              "enum": [
+                "no_room",
+                "one",
+                "two",
+                "three",
+                "four",
+                "five_or_more",
+                "unknown",
+                null
+              ]
+            },
+            "candidates": {
+              "items": {
+                "enum": [
+                  "no_room",
+                  "one",
+                  "two",
+                  "three",
+                  "four",
+                  "five_or_more",
+                  "unknown"
+                ]
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}
