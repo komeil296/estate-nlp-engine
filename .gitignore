@@ -27,3 +27,4 @@ outputs/
 
 # Logs
 *.log
+/data/divar_weak_label_sample.jsonl
