@@ -1,4 +1,4 @@
-﻿# گزارش پیشرفت توسعه
+# گزارش پیشرفت توسعه
 
 ## 2026-10-30 — مرحله صفر: ایجاد مخزن و مستندات
 
@@ -296,3 +296,78 @@ weakLabel نیز معیار ارزیابی کیفیت نیست.
 
 ### مرحله بعد
 بررسی امن شناسه source و توزیع شماره‌های sourceRow.
+
+
+## 2026-10-30 — بازبینی سورس واقعی و دیتابیس یک‌میلیونی
+
+### سورس بررسی‌شده
+آرشیو `estate-nlp-engine.zip` شامل ماژول‌های اجرایی زیر بود:
+- `normalization.py`
+- `extractor.py`
+- `financial.py`
+- `models.py`
+- JSON Schema نسخه 0.1
+- تست‌های نرمال‌سازی، مدل‌ها، schema، extractor و financial
+
+پیش از تغییرات جدید، 69 تست موفق اجرا شدند.
+
+### دیتابیس بررسی‌شده
+فایل `data.zip` شامل `divar_ads.sqlite` بود:
+- 1,000,000 رکورد
+- 61 ستون
+- جدول `divar_ads`
+- `PRAGMA integrity_check = ok`
+- دیتابیس در حالت read-only استفاده شد و تغییر نکرد.
+
+گزارش کامل: `DATASET_AUDIT_2026-10-30.md`
+
+### پیاده‌سازی جدید
+ماژول `src/estate_nlp/divar_dataset.py` اضافه شد تا source metadata را به weak labelهای قابل ردیابی نگاشت کند.
+
+قواعد مهم:
+- `cat3_slug=presell` و `partnership` برای تعیین transaction type بر `cat2_slug` اولویت دارند.
+- دسته‌های `house-villa-*` به‌جای حدس، ambiguous می‌مانند.
+- `rooms_count` فارسی به taxonomy اتاق نگاشت می‌شود.
+- NULL از false جداست.
+- صفر و modeهای «مجانی» و «توافقی» حفظ می‌شوند.
+- ارز و واحد مالی حدس زده یا تبدیل نمی‌شوند.
+- متن title و description در خروجی mapping کپی نمی‌شود.
+- مقدارهای خام و نام فیلد منبع برای traceability حفظ می‌شوند.
+
+### ابزارهای جدید
+- `scripts/audit_divar_sqlite.py`: ممیزی read-only دیتابیس، بدون چاپ متن آگهی.
+- `scripts/evaluate_divar_extractor.py`: سنجش توافق استخراج‌گر با weak labels روی نمونه stratified، بدون چاپ یا ذخیره متن آگهی.
+
+### ارزیابی
+نمونه شامل 300 رکورد از هر یک از شش دسته، به‌علاوه تمام 19 رکورد دارای `rent_to_single` بود؛ در مجموع 1,819 رکورد یکتا.
+
+نتایج در `EXTRACTOR_WEAK_LABEL_EVALUATION_2026-10-30.md` ثبت شدند. این نتایج gold accuracy نیستند و صرفاً توافق با source labels را نشان می‌دهند.
+
+### تست نهایی
+پس از افزودن ماژول و تست‌های جدید:
+`90 passed`
+
+### فایل‌های مستندات
+README، ARCHITECTURE، DATASET، EXTRACTION_SCHEMA و AI_HANDOFF با وضعیت واقعی هماهنگ شدند.
+
+### Git و داده
+- هیچ commit یا push انجام نشد.
+- دیتابیس خام وارد بسته سورس نشد.
+- هیچ فایل دیتابیس یا CSV در Git اضافه نشد.
+- وضعیت `.git` از روی آرشیو ZIP قابل بررسی نبود.
+
+### مرحله بعد
+ساخت مجموعه طلایی انسانی کوچک و سپس اصلاح extractor بر اساس خطاهای قابل بازتولید؛ نه آموزش مدل از weak labels خام.
+
+
+## 2026-10-30 — Financial extraction evaluation and schema 0.2
+
+- Added a reproducible, read-only financial weak-label evaluator with a fixed sample seed.
+- Evaluated price, deposit, monthly rent, daily rent, weekend rent, special-day rent, and extra-person cost separately.
+- Added `special_day_rent` as a distinct semantic role; it is no longer conflated with weekend rent.
+- Added conservative Persian listing cues for `سپرده`, `پیش`, `کرایه`, and `ماهی`.
+- Added context-gated interpretation of standalone `م` as million; this is not enabled without a nearby financial-role cue.
+- Excluded parcel/plaque identifiers from financial number extraction.
+- Bumped the draft extraction schema from `0.1` to `0.2`.
+- Added regression tests for the new financial cues and role.
+- Financial agreement remains low against structured source labels. These labels are weak supervision, not gold annotations; no final-model training claim is justified.

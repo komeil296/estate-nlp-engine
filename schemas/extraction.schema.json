@@ -16,7 +16,7 @@
   ],
   "properties": {
     "schema_version": {
-      "const": "0.1"
+      "const": "0.2"
     },
     "document_type": {
       "$ref": "#/$defs/documentTypeField"
@@ -30,7 +30,10 @@
     "location": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["city", "neighborhood"],
+      "required": [
+        "city",
+        "neighborhood"
+      ],
       "properties": {
         "city": {
           "$ref": "#/$defs/stringField"
@@ -43,7 +46,13 @@
     "property": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["building_area_sqm", "land_area_sqm", "rooms", "building", "features"],
+      "required": [
+        "building_area_sqm",
+        "land_area_sqm",
+        "rooms",
+        "building",
+        "features"
+      ],
       "properties": {
         "building_area_sqm": {
           "$ref": "#/$defs/numberField"
@@ -114,20 +123,48 @@
             "security_guard"
           ],
           "properties": {
-            "parking": {"$ref": "#/$defs/booleanField"},
-            "elevator": {"$ref": "#/$defs/booleanField"},
-            "warehouse": {"$ref": "#/$defs/booleanField"},
-            "balcony": {"$ref": "#/$defs/booleanField"},
-            "pool": {"$ref": "#/$defs/booleanField"},
-            "jacuzzi": {"$ref": "#/$defs/booleanField"},
-            "sauna": {"$ref": "#/$defs/booleanField"},
-            "water": {"$ref": "#/$defs/booleanField"},
-            "electricity": {"$ref": "#/$defs/booleanField"},
-            "gas": {"$ref": "#/$defs/booleanField"},
-            "heating": {"$ref": "#/$defs/booleanField"},
-            "cooling": {"$ref": "#/$defs/booleanField"},
-            "restroom": {"$ref": "#/$defs/booleanField"},
-            "security_guard": {"$ref": "#/$defs/booleanField"}
+            "parking": {
+              "$ref": "#/$defs/booleanField"
+            },
+            "elevator": {
+              "$ref": "#/$defs/booleanField"
+            },
+            "warehouse": {
+              "$ref": "#/$defs/booleanField"
+            },
+            "balcony": {
+              "$ref": "#/$defs/booleanField"
+            },
+            "pool": {
+              "$ref": "#/$defs/booleanField"
+            },
+            "jacuzzi": {
+              "$ref": "#/$defs/booleanField"
+            },
+            "sauna": {
+              "$ref": "#/$defs/booleanField"
+            },
+            "water": {
+              "$ref": "#/$defs/booleanField"
+            },
+            "electricity": {
+              "$ref": "#/$defs/booleanField"
+            },
+            "gas": {
+              "$ref": "#/$defs/booleanField"
+            },
+            "heating": {
+              "$ref": "#/$defs/booleanField"
+            },
+            "cooling": {
+              "$ref": "#/$defs/booleanField"
+            },
+            "restroom": {
+              "$ref": "#/$defs/booleanField"
+            },
+            "security_guard": {
+              "$ref": "#/$defs/booleanField"
+            }
           }
         }
       }
@@ -154,6 +191,7 @@
               "monthly_rent",
               "daily_rent",
               "weekend_rent",
+              "special_day_rent",
               "price_per_sqm",
               "cost_per_extra_person",
               "unknown"
@@ -164,11 +202,18 @@
             "minLength": 1
           },
           "normalized_value": {
-            "type": ["number", "null"],
+            "type": [
+              "number",
+              "null"
+            ],
             "minimum": 0
           },
           "currency": {
-            "enum": ["toman", "rial", "unspecified"]
+            "enum": [
+              "toman",
+              "rial",
+              "unspecified"
+            ]
           },
           "period": {
             "enum": [
@@ -189,7 +234,9 @@
     "rental_conditions": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["allow_single_person"],
+      "required": [
+        "allow_single_person"
+      ],
       "properties": {
         "allow_single_person": {
           "$ref": "#/$defs/booleanField"
@@ -207,13 +254,22 @@
       ],
       "properties": {
         "source": {
-          "type": ["string", "null"]
+          "type": [
+            "string",
+            "null"
+          ]
         },
         "source_style": {
-          "type": ["string", "null"]
+          "type": [
+            "string",
+            "null"
+          ]
         },
         "source_row": {
-          "type": ["integer", "null"],
+          "type": [
+            "integer",
+            "null"
+          ],
           "minimum": 1
         },
         "original_dataset_labels": {
@@ -236,7 +292,12 @@
       ],
       "properties": {
         "value": {
-          "type": ["string", "number", "boolean", "null"]
+          "type": [
+            "string",
+            "number",
+            "boolean",
+            "null"
+          ]
         },
         "status": {
           "enum": [
@@ -260,7 +321,11 @@
         "candidates": {
           "type": "array",
           "items": {
-            "type": ["string", "number", "boolean"]
+            "type": [
+              "string",
+              "number",
+              "boolean"
+            ]
           },
           "uniqueItems": true
         }
@@ -269,28 +334,24 @@
         {
           "if": {
             "properties": {
-              "status": {"const": "extracted"}
+              "status": {
+                "const": "extracted"
+              }
             }
           },
           "then": {
             "properties": {
-              "value": {"not": {"type": "null"}},
-              "evidence": {"minItems": 1},
-              "candidates": {"maxItems": 0}
-            }
-          }
-        },
-        {
-          "if": {
-            "properties": {
-              "status": {"const": "not_found"}
-            }
-          },
-          "then": {
-            "properties": {
-              "value": {"type": "null"},
-              "evidence": {"maxItems": 0},
-              "candidates": {"maxItems": 0}
+              "value": {
+                "not": {
+                  "type": "null"
+                }
+              },
+              "evidence": {
+                "minItems": 1
+              },
+              "candidates": {
+                "maxItems": 0
+              }
             }
           }
         },
@@ -298,15 +359,46 @@
           "if": {
             "properties": {
               "status": {
-                "enum": ["ambiguous", "conflict"]
+                "const": "not_found"
               }
             }
           },
           "then": {
             "properties": {
-              "value": {"type": "null"},
-              "evidence": {"minItems": 1},
-              "candidates": {"minItems": 2}
+              "value": {
+                "type": "null"
+              },
+              "evidence": {
+                "maxItems": 0
+              },
+              "candidates": {
+                "maxItems": 0
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "enum": [
+                  "ambiguous",
+                  "conflict"
+                ]
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "value": {
+                "type": "null"
+              },
+              "evidence": {
+                "minItems": 1
+              },
+              "candidates": {
+                "minItems": 2
+              }
             }
           }
         }
@@ -314,12 +406,21 @@
     },
     "stringField": {
       "allOf": [
-        {"$ref": "#/$defs/fieldResult"},
+        {
+          "$ref": "#/$defs/fieldResult"
+        },
         {
           "properties": {
-            "value": {"type": ["string", "null"]},
+            "value": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
             "candidates": {
-              "items": {"type": "string"}
+              "items": {
+                "type": "string"
+              }
             }
           }
         }
@@ -327,11 +428,16 @@
     },
     "numberField": {
       "allOf": [
-        {"$ref": "#/$defs/fieldResult"},
+        {
+          "$ref": "#/$defs/fieldResult"
+        },
         {
           "properties": {
             "value": {
-              "type": ["number", "null"],
+              "type": [
+                "number",
+                "null"
+              ],
               "minimum": 0
             },
             "candidates": {
@@ -346,12 +452,21 @@
     },
     "booleanField": {
       "allOf": [
-        {"$ref": "#/$defs/fieldResult"},
+        {
+          "$ref": "#/$defs/fieldResult"
+        },
         {
           "properties": {
-            "value": {"type": ["boolean", "null"]},
+            "value": {
+              "type": [
+                "boolean",
+                "null"
+              ]
+            },
             "candidates": {
-              "items": {"type": "boolean"}
+              "items": {
+                "type": "boolean"
+              }
             }
           }
         }
@@ -359,7 +474,9 @@
     },
     "documentTypeField": {
       "allOf": [
-        {"$ref": "#/$defs/stringField"},
+        {
+          "$ref": "#/$defs/stringField"
+        },
         {
           "properties": {
             "value": {
@@ -387,7 +504,9 @@
     },
     "transactionTypeField": {
       "allOf": [
-        {"$ref": "#/$defs/stringField"},
+        {
+          "$ref": "#/$defs/stringField"
+        },
         {
           "properties": {
             "value": {
@@ -421,7 +540,9 @@
     },
     "propertyTypeField": {
       "allOf": [
-        {"$ref": "#/$defs/stringField"},
+        {
+          "$ref": "#/$defs/stringField"
+        },
         {
           "properties": {
             "value": {
@@ -463,7 +584,9 @@
     },
     "roomCountField": {
       "allOf": [
-        {"$ref": "#/$defs/stringField"},
+        {
+          "$ref": "#/$defs/stringField"
+        },
         {
           "properties": {
             "value": {

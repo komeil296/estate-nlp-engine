@@ -1,6 +1,6 @@
 # Estate NLP Extraction Schema
 
-Version: 0.1
+Version: 0.2
 Status: Draft
 
 ## 1. Purpose
@@ -138,6 +138,7 @@ Supported semantic roles:
 - monthly_rent
 - daily_rent
 - weekend_rent
+- special_day_rent
 - price_per_sqm
 - cost_per_extra_person
 - unknown
@@ -199,10 +200,22 @@ Keep the following metadata when available:
 
 ## 13. Implementation Status
 
-This document is a proposed contract.
+- This contract is still Draft; it has not been approved as the final product API.
+- A machine-readable JSON Schema exists at `schemas/extraction.schema.json`.
+- Typed Python models exist in `src/estate_nlp/models.py`.
+- The current extractor returns this structure and is validated by tests.
+- The current schema version is `0.2`.
+- Confidence remains null because no calibrated confidence method has been evaluated.
 
-No final JSON schema has been approved yet.
-No extraction code has been implemented.
+## 14. Known Gaps Found Against the One-Million-Row Divar Database
 
-The next implementation stage will introduce
-machine-readable schema validation and tests.
+The source database contains fields that are richer than the current output contract:
+
+- `has_heating_system`, `has_cooling_system`, `has_restroom`, and `has_warm_water_provider` are categorical values, not simple booleans.
+- `construction_year` includes Persian year strings and a range-like value such as `قبل از ۱۳۷۰`.
+- `floor` and `total_floors_count` include `30+` and `unselect`.
+- `rent_price_on_special_days` maps to the distinct `special_day_rent` role in schema version `0.2`.
+- `has_barbecue`, `has_business_deed`, `rent_type`, `extra_person_capacity`, and transformation-related financial fields are not represented as first-class extraction fields yet.
+- Source `property_type` values such as `jungle` and `beach` belong to temporary-rental context and must not be treated as the general property type.
+
+These gaps are documented findings, not permission to infer values. A later schema revision should be designed and tested before changing the public contract.

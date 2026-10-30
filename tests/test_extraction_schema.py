@@ -45,7 +45,7 @@ def valid_payload():
     features["parking"] = extracted(False, "بدون پارکینگ")
 
     return {
-        "schema_version": "0.1",
+        "schema_version": "0.2",
         "document_type": extracted("listing", "فروش آپارتمان"),
         "transaction_type": extracted("sale", "فروش"),
         "property_type": extracted("apartment", "آپارتمان"),
