@@ -37,3 +37,7 @@
 
 ## ادامه کار
 ابتدا محیط توسعه و ساختار داده آگهی‌ها را بررسی می‌کنیم. سپس یک نمونه کوچک و بی‌خطر از داده‌ها برای طراحی و ارزیابی استخراج‌گر انتخاب می‌شود.
+
+## Development Environment
+
+Python 3.13.16 is used. Create the environment with `python -m venv .venv` and activate it using `.\.venv\Scripts\Activate.ps1`.

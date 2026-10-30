@@ -23,3 +23,19 @@
 
 ### یادآوری برای ادامه در چت جدید
 ابتدا این فایل و `PROJECT_CONTEXT.md` و `DECISIONS.md` را بخوان. مرحله فعلی «مستندسازی اولیه؛ بدون کد اجرایی» است. از فرض‌کردن قالب دیتاست یا انتخاب فناوری بدون بررسی خودداری کن.
+
+## 2026-10-30 - Python Environment Setup
+
+- Python version: 3.13.16
+- pip version: 26.2.2
+- Virtual environment: .venv
+- Virtual environment created successfully.
+- Activation verified successfully.
+- Python executable resolves to .venv\Scripts\python.exe.
+- No project dependencies installed yet.
+
+## 2026-10-30 - Python Environment Setup
+- Python: 3.13.16
+- pip: 26.2.2
+- Virtual environment: .venv
+- Creation and activation verified successfully.
