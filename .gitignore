@@ -1,0 +1,29 @@
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.venv/
+venv/
+.env
+.env.*
+
+# Editors and operating systems
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Local datasets and generated artifacts
+data/raw/
+data/processed/
+data/external/
+artifacts/
+outputs/
+*.parquet
+*.sqlite
+*.db
+
+# Logs
+*.log
